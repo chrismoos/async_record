@@ -11,6 +11,7 @@ begin
     gem.homepage = "http://github.com/chrismoos/async_record"
     gem.authors = ["Chris Moos"]
     gem.add_development_dependency "shoulda", ">= 0"
+    gem.add_dependency "em-mysql"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new

@@ -1,17 +1,67 @@
-= async_record
+= AsyncRecord
 
-Description goes here.
+One of the greatest things about running on an event-based server is that you can get accelerated performance in database access. 
 
-== Note on Patches/Pull Requests
- 
-* Fork the project.
-* Make your feature addition or bug fix.
-* Add tests for it. This is important so I don't break it in a
-  future version unintentionally.
-* Commit, do not mess with rakefile, version, or history.
-  (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
-* Send me a pull request. Bonus points for topic branches.
+Usually there is a lot of time spent blocking for a database query to return. In AsyncRecord, your queries don't block the request. You will receive a callback once the query has completed. This has major performance implications. 
 
-== Copyright
+NOTE: Even though your connections are non-blocking to the database server, the database server is still blocking when accessing IO (disk/memory). 
 
-Copyright (c) 2010 Chris Moos. See LICENSE for details.
+To use AsyncRecord, do the following:
+
+Install the Gem:
+
+  sudo gem install async_record
+
+Setup async_record:
+  
+  require 'async_record'
+  conn = AsyncRecord::Connection::MySQL.new(:host => "127.0.0.1", :port => 3306, :user => "root", :database => "database")
+  conn.connect
+  
+Define a model:
+
+  class User < AsyncRecord::Base
+    set_table_name "users"
+  end
+
+=== Controller  
+  
+These examples are for the Fastr web framework.
+
+In your controller, try the following (remember to put the following in a deferred response):
+  
+=== Get all the rows in the table:
+
+  User.all(:limit => 256) do |users|
+    users.each do |user|
+      response.send_data("#{user.username}\n")
+    end
+    response.succeed
+  end
+  
+=== Find a row by ID
+
+  User.find(1) do |user|
+    if user.nil?
+      response.send_data("User not found")
+    else
+      response.send_data("User: #{user.username}\n")
+    end
+    response.succeed
+  end
+  
+=== Get the count of rows in the table
+
+  User.count do |count|
+    response.send_data("Count: #{count}")
+    response.succeed
+  end
+  
+=== Run a custom query
+
+  User.query("select username from users") do |results|
+    response.send_data("Results: #{results.inspect}")
+    response.succeed
+  end
+  
+WARNING: AsyncRecord is under heavy development, but its pretty cool :).
