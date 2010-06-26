@@ -5,12 +5,12 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "async_record"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.summary = %Q{Asynchronous ORM for Ruby}
+    gem.description = %Q{Asynchronous ORM for Ruby}
     gem.email = "chris@tech9computers.com"
-    gem.homepage = "http://github.com/chris.moos/async_record"
+    gem.homepage = "http://github.com/chrismoos/async_record"
     gem.authors = ["Chris Moos"]
-    gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
+    gem.add_development_dependency "shoulda", ">= 0"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
